@@ -3,18 +3,26 @@ import 'features/home/data/category_model.dart';
 List<CategoryModel> categories = [
   CategoryModel(
     name: "Fruits",
-    image: "https://cdn-icons-png.flaticon.com/512/415/415733.png",
+    icon: "🍎",
   ),
   CategoryModel(
     name: "Vegetables",
-    image: "https://cdn-icons-png.flaticon.com/512/2909/2909763.png",
+    icon: "🥦",
   ),
   CategoryModel(
     name: "Snacks",
-    image: "https://cdn-icons-png.flaticon.com/512/2553/2553691.png",
+    icon: "🍿",
   ),
   CategoryModel(
     name: "Drinks",
-    image: "https://cdn-icons-png.flaticon.com/512/2405/2405479.png",
+    icon: "🥤",
+  ),
+  CategoryModel(
+    name: "Electronics",
+    icon: "📱",
+  ),
+  CategoryModel(
+    name: "Fashion",
+    icon: "👟",
   ),
 ];

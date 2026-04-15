@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/app_theme.dart';
 import 'package:ecommerce_app/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,21 +21,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: router,
-        theme: ThemeData(
-          primaryColor: Colors.green,
-          scaffoldBackgroundColor: Colors.grey[100],
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            centerTitle: false,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-            iconTheme: IconThemeData(color: Colors.black),
-          ),
-        ),
+        title: 'ShopEase',
+        theme: AppTheme.theme,
       ),
     );
   }

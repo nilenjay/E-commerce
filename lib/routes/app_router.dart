@@ -1,36 +1,27 @@
 import 'package:ecommerce_app/features/cart/presentation/pages/cart_screen.dart';
 import 'package:ecommerce_app/features/home/presentation/pages/home_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/home/data/product_model.dart';
 import '../features/home/presentation/pages/product_detail_screen.dart';
 
-
 final GoRouter router = GoRouter(
   initialLocation: '/home',
-    routes: [
-      GoRoute(
-          path: '/home',
-          builder: (context, state) => HomeScreen(),
-      ),
-      GoRoute(
-          path: '/detail',
-          builder: (context, state) {
-            final product = state.extra as Product;
-            return ProductDetailScreen(product: product);
-          },
-
-      ),
-      GoRoute(
-        path: '/cart',
-        builder: (context, state) => CartScreen(),
-      ),
-
-    ],
-
+  routes: [
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => HomeScreen(),
+    ),
+    GoRoute(
+      path: '/detail',
+      builder: (context, state) {
+        final product = state.extra as Product;
+        return ProductDetailScreen(product: product);
+      },
+    ),
+    GoRoute(
+      path: '/cart',
+      builder: (context, state) => CartScreen(),
+    ),
+  ],
 );
-
-class CartPage {
-}
-

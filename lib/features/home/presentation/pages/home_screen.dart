@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../banner_mock_data.dart';
+import '../../../../core/app_theme.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../cart/presentation/bloc/cart_state.dart';
 import '../bloc/product_bloc.dart';
@@ -26,15 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
       create: (context) => ProductBloc()..add(LoadProducts()),
       child: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           final now = DateTime.now();
-
           if (lastBackPressed == null ||
-              now.difference(lastBackPressed!) > Duration(seconds: 2)) {
+              now.difference(lastBackPressed!) > const Duration(seconds: 2)) {
             lastBackPressed = now;
-
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Press back again to exit")),
+              const SnackBar(
+                content: Text("Press back again to exit"),
+                duration: Duration(seconds: 2),
+              ),
             );
           } else {
             Navigator.of(context).pop();
@@ -42,132 +44,175 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text('E-Commerce App'),
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.storefront_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Text('ShopEase'),
+              ],
+            ),
             actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(Icons.search),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.search_rounded),
+                style: IconButton.styleFrom(
+                  backgroundColor: AppTheme.background,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
               ),
-
-              // 🛒 CART ICON WITH BADGE
+              const SizedBox(width: 4),
               BlocBuilder<CartBloc, CartState>(
                 builder: (context, state) {
                   return Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            context.push('/cart');
-                          },
-                          child: Icon(Icons.shopping_cart),
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      onPressed: () => context.push('/cart'),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppTheme.background,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-
-                        if (state.cartItems.isNotEmpty)
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: CircleAvatar(
-                              radius: 8,
-                              backgroundColor: Colors.red,
-                              child: Text(
-                                state.cartItems.length.toString(),
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                      ),
+                      icon: Badge(
+                        isLabelVisible: state.cartItems.isNotEmpty,
+                        label: Text(
+                          state.cartItems.length.toString(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
                           ),
-                      ],
+                        ),
+                        backgroundColor: AppTheme.error,
+                        child: const Icon(Icons.shopping_bag_outlined),
+                      ),
                     ),
                   );
                 },
               ),
             ],
           ),
-
           body: BlocBuilder<ProductBloc, ProductState>(
             builder: (context, state) {
               if (state is ProductLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              else if (state is ProductLoaded) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: AppTheme.primary,
+                    strokeWidth: 3,
+                  ),
+                );
+              } else if (state is ProductLoaded) {
                 return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      // 🔥 Banner
+                      const SizedBox(height: 12),
                       BannerSlider(banners: banners),
-
-                      SizedBox(height: 10),
-
-                      // 🔥 Categories Title
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          "Categories",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 5),
-
-                      // 🔥 Categories List
+                      const SizedBox(height: 20),
+                      _buildSectionHeader("Categories", ""),
+                      const SizedBox(height: 8),
                       CategoryList(),
-
-                      SizedBox(height: 10),
-
-                      // 🔥 Products Title
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          "Popular Products",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
+                      const SizedBox(height: 20),
+                      _buildSectionHeader(
+                        "Popular Products",
+                        "${state.products.length} items",
                       ),
-
-                      SizedBox(height: 10),
-
-                      // 🔥 Product Grid (inside scroll)
+                      const SizedBox(height: 8),
                       GridView.builder(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.products.length,
                         gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 0.7,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.62,
                         ),
                         itemBuilder: (context, index) {
-                          final product = state.products[index];
-                          return ProductCard(product: product);
+                          return ProductCard(product: state.products[index]);
                         },
                       ),
                     ],
                   ),
                 );
-              }
-
-              else {
+              } else {
                 return Center(
-                  child: Text('Error occurred during loading'),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline_rounded,
+                        size: 56,
+                        color: AppTheme.textMuted,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Something went wrong',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Please try again later',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, String trailing) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+              color: AppTheme.textPrimary,
+              letterSpacing: -0.3,
+            ),
+          ),
+          if (trailing.isNotEmpty)
+            Text(
+              trailing,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textMuted,
+              ),
+            ),
+        ],
       ),
     );
   }
