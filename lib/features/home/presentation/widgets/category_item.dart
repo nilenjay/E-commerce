@@ -26,8 +26,12 @@ class CategoryItem extends StatelessWidget{
                   fit: BoxFit.cover,
                   width: 40,
                   height: 40,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return Center(child: CircularProgressIndicator());
+                  },
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.image_not_supported, size: 30);
+                    return Icon(Icons.broken_image);
                   },
                 ),
               ),

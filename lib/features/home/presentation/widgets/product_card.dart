@@ -32,10 +32,13 @@ class ProductCard extends StatelessWidget {
                   child: Image.network(
                     product.image,
                     fit: BoxFit.cover,
-                    width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(child: Icon(Icons.broken_image));
-                      }
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.broken_image);
+                    },
                   ),
                 ),
               ),

@@ -15,7 +15,17 @@ class ProductDetailScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Image.network(product.image),
+          Image.network(
+            product.image,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, progress) {
+              if (progress == null) return child;
+              return Center(child: CircularProgressIndicator());
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.broken_image);
+            },
+          ),
           SizedBox(height: 10),
           Text(product.name),
           Text("₹${product.price}"),

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class BannerSlider extends StatelessWidget{
 
@@ -23,6 +24,13 @@ class BannerSlider extends StatelessWidget{
               imageUrl,
               fit: BoxFit.cover,
               width: double.infinity,
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) return child;
+                return Center(child: CircularProgressIndicator());
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.broken_image);
+              },
             ),
           );
         }).toList(),

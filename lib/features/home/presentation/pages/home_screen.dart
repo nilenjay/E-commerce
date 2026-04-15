@@ -3,6 +3,7 @@ import 'package:ecommerce_app/features/home/presentation/widgets/category_list.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../banner_mock_data.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../cart/presentation/bloc/cart_state.dart';
@@ -47,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.only(right: 10),
                 child: Icon(Icons.search),
               ),
+
+              // 🛒 CART ICON WITH BADGE
               BlocBuilder<CartBloc, CartState>(
                 builder: (context, state) {
                   return Padding(
@@ -54,14 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Stack(
                       children: [
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             context.push('/cart');
                           },
-                          child: Stack(
-                            children: [
-                              Icon(Icons.shopping_cart),
-                            ],
-                          ),
+                          child: Icon(Icons.shopping_cart),
                         ),
 
                         if (state.cartItems.isNotEmpty)
@@ -87,21 +86,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+
           body: BlocBuilder<ProductBloc, ProductState>(
             builder: (context, state) {
               if (state is ProductLoading) {
                 return Center(child: CircularProgressIndicator());
-              } else if (state is ProductLoaded) {
-                return Column(
-                  children: [
-                    BannerSlider(banners: banners),
+              }
 
-                    SizedBox(height: 10),
+              else if (state is ProductLoaded) {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
+                      // 🔥 Banner
+                      BannerSlider(banners: banners),
+
+                      SizedBox(height: 10),
+
+                      // 🔥 Categories Title
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
                         child: Text(
                           "Categories",
                           style: TextStyle(
@@ -110,16 +115,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                    ),
 
-                    CategoryList(),
+                      SizedBox(height: 5),
 
-                    SizedBox(height: 10),
+                      // 🔥 Categories List
+                      CategoryList(),
 
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
+                      SizedBox(height: 10),
+
+                      // 🔥 Products Title
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
                         child: Text(
                           "Popular Products",
                           style: TextStyle(
@@ -128,11 +134,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                    ),
 
-                    Expanded(
-                      child: GridView.builder(
+                      SizedBox(height: 10),
+
+                      // 🔥 Product Grid (inside scroll)
+                      GridView.builder(
                         padding: EdgeInsets.all(10),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: state.products.length,
                         gridDelegate:
                         SliverGridDelegateWithFixedCrossAxisCount(
@@ -146,10 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           return ProductCard(product: product);
                         },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
-              } else {
+              }
+
+              else {
                 return Center(
                   child: Text('Error occurred during loading'),
                 );

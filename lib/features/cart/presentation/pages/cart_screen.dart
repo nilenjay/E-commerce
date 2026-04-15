@@ -15,7 +15,14 @@ class CartScreen extends StatelessWidget{
           builder: (context,state){
             if(state.cartItems.isEmpty){
               return Center(
-                child: Text('Your cart is empty'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.grey),
+                    SizedBox(height: 10),
+                    Text("Your cart is empty"),
+                  ],
+                ),
               );
             }
             return ListView.builder(
@@ -26,7 +33,13 @@ class CartScreen extends StatelessWidget{
                     leading: Image.network(
                       product.image,
                       fit: BoxFit.cover,
-                      width: 50,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(Icons.broken_image);
+                      },
                     ),
                     title: Text(product.name),
                     subtitle: Text('₹${product.price}'),
