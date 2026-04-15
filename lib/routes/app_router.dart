@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/features/cart/presentation/pages/cart_screen.dart';
 import 'package:ecommerce_app/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,9 +21,16 @@ final GoRouter router = GoRouter(
             return ProductDetailScreen(product: product);
           },
 
-      )
+      ),
+      GoRoute(
+        path: '/cart',
+        builder: (context, state) => CartScreen(),
+      ),
 
     ],
 
 );
+
+class CartPage {
+}
 

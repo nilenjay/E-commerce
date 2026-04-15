@@ -2,6 +2,7 @@ import 'package:ecommerce_app/features/home/presentation/widgets/banner_slider.d
 import 'package:ecommerce_app/features/home/presentation/widgets/category_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../banner_mock_data.dart';
 import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../../cart/presentation/bloc/cart_state.dart';
@@ -52,7 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.only(right: 10),
                     child: Stack(
                       children: [
-                        Icon(Icons.shopping_cart),
+                        GestureDetector(
+                          onTap: (){
+                            context.push('/cart');
+                          },
+                          child: Stack(
+                            children: [
+                              Icon(Icons.shopping_cart),
+                            ],
+                          ),
+                        ),
 
                         if (state.cartItems.isNotEmpty)
                           Positioned(
