@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text('ShopEase'),
+                const Text('E-Commerce App'),
               ],
             ),
             actions: [
