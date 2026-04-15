@@ -3,6 +3,8 @@ import 'package:ecommerce_app/features/home/presentation/widgets/category_list.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../banner_mock_data.dart';
+import '../../../cart/presentation/bloc/cart_bloc.dart';
+import '../../../cart/presentation/bloc/cart_state.dart';
 import '../bloc/product_bloc.dart';
 import '../bloc/product_event.dart';
 import '../bloc/product_state.dart';
@@ -43,6 +45,35 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: Icon(Icons.search),
+              ),
+              BlocBuilder<CartBloc, CartState>(
+                builder: (context, state) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Stack(
+                      children: [
+                        Icon(Icons.shopping_cart),
+
+                        if (state.cartItems.isNotEmpty)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: CircleAvatar(
+                              radius: 8,
+                              backgroundColor: Colors.red,
+                              child: Text(
+                                state.cartItems.length.toString(),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),

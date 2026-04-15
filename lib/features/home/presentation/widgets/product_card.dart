@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../cart/presentation/bloc/cart_bloc.dart';
+import '../../../cart/presentation/bloc/cart_event.dart';
 import '../../data/product_model.dart';
 
 class ProductCard extends StatelessWidget {
@@ -69,7 +72,11 @@ class ProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {context.read<CartBloc>().add(AddToCart(product));
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("${product.name} added to cart")),
+                  );},
                   child: Text("Add"),
                 ),
               ),
