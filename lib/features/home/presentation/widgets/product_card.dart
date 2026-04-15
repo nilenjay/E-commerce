@@ -11,7 +11,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/detail');
+        context.push('/detail',extra: product);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -30,6 +30,9 @@ class ProductCard extends StatelessWidget {
                     product.image,
                     fit: BoxFit.cover,
                     width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(child: Icon(Icons.broken_image));
+                      }
                   ),
                 ),
               ),

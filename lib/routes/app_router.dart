@@ -2,6 +2,7 @@ import 'package:ecommerce_app/features/home/presentation/pages/home_screen.dart'
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/home/data/product_model.dart';
 import '../features/home/presentation/pages/product_detail_screen.dart';
 
 
@@ -14,7 +15,10 @@ final GoRouter router = GoRouter(
       ),
       GoRoute(
           path: '/detail',
-          builder: (context, state) => ProductDetailScreen(),
+          builder: (context, state) {
+            final product = state.extra as Product;
+            return ProductDetailScreen(product: product);
+          },
 
       )
 
